@@ -3,7 +3,7 @@ Contributors: accessiBe, WebFactory
 Tags: accessibility, web accessibility, wordpress accessibility, ada, wcag, accessible, a11y
 Requires at least: 4.7
 Tested up to: 6.4
-Stable tag: 1.18
+Stable tag: 1.19
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ Fix accessibility issues & make your site accessible with an AI-powered accessib
 
 accessiBe is the market leader in web accessibility solutions and services.
 
-Our AI-powered solution, accessWidget, maintains ADA and WCAG compliance and enhances the usability of any website. It could boost your brand perception, reach new customers by opening your website to 15% of the world’s population with a disability, and is trusted to mitigate legal risk for tens of thousands of businesses and industry leaders alike.
+Our AI-powered solution, accessWidget, helps maintain ADA compliance and WCAG conformance, and enhances the usability of any website. It could boost your brand perception, reach new customers by opening your website to 16% of the world’s population with a disability, and is trusted to mitigate legal risk for tens of thousands of businesses and industry leaders alike.
 
 accessiBe’s free WordPress plugin helps connect to our solution for simpler installation and configuration. The accessiBe plugin for WordPress also helps to seamlessly connect to accessiBe’s AI solution without the need to touch code.
 
@@ -28,7 +28,7 @@ Try the leading WordPress accessibility solution today with a 7-day free trial; 
 
 Open your website to the world!
 
-Navigating the internet is a daily challenge for 15% of the world’s population. That’s the percentage of people with disabilities in the world today, and they experience limitations when navigating your website. accessiBe’s solution coupled with our WordPress accessibility plugin enables a wide array of people with disabilities to use your website effectively, boosting your market reach.
+Navigating the internet is a daily challenge for 16% of the world’s population. That’s the percentage of people with disabilities in the world today, and they experience limitations when navigating your website. accessiBe’s solution coupled with our WordPress accessibility plugin enables a wide array of people with disabilities to use your website effectively, boosting your market reach.
 
 To make websites accessible, accessWidget service utilizes two applications that run together. The AI-powered background process handles optimizations for the more complex requirements like screen-reader and keyboard navigation adjustments, while the accessibility interface handles UI and design-related adjustments.
 
@@ -68,7 +68,7 @@ After installing the accessiBe plugin and registering for an account on our site
 
 **Developed Side-By-Side with People with Disabilities**
 
-accessWidget’s first stable version took 18 months of daily development to collaborate with people with disabilities that continue today. Blind people, motor and visually impaired people, people with epilepsy, and others are vital parts of our research & development.
+accessWidget’s first stable version took 18 months of daily development to collaborate with people with disabilities that continue today. People who are blind, people with motor and vision impairments, people with epilepsy, as well as people with a variety of other disabilities, are vital members of our research & development.
 > “Developing accessiBe side-by-side with the people who are using it daily is the secret sauce to our success.”
 > **Shir Ekerling, accessiBe CEO.**
 
@@ -102,6 +102,9 @@ Yes! accessWidget is fully customizable and can easily match your website’s de
 1. Easily configure all accessibility options
 
 == Changelog ==
+= v1.19 =
+* 2024-10-16
+* readme update
 
 = v1.15 =
 * 2020-01-19
