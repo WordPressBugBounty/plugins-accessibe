@@ -3,7 +3,7 @@
 Plugin Name: Web Accessibility by accessiBe
 Plugin URI: https://accessibe.com/
 Description: accessiBe is the #1 fully automated web accessibility solution. Protect your website from lawsuits and increase your potential audience.
-Version: 1.19
+Version: 1.20
 Author: accessiBe
 Author URI: https://accessibe.com/
 License: GPLv2 or later
