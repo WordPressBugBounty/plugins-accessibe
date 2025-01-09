@@ -13,9 +13,8 @@ class MixpanelHandler
 
     private function getConfig() {
         $config = [
-            'host' => 'https://dashboard.accessibe.com',
+            'host' => 'dashboard.accessibe.com',
             'events_endpoint' => '/mixpanel/proxy/track',
-            'debug' => true,
             'people_endpoint' => '/mixpanel/proxy/engage',
             'use_ssl' => true,
             'error_callback' => function($err) {

@@ -3,7 +3,7 @@ Contributors: accessiBe
 Tags: accessibility, web accessibility, wordpress accessibility, ada, wcag, accessible, a11y
 Requires at least: 4.7
 Tested up to: 6.7
-Stable tag: 2.0
+Stable tag: 2.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -57,9 +57,13 @@ Yes. You can use accessWidget for free during a 7-day free trial.
 Plans start at $490 a year (or $59/mo), and vary depending on your website’s monthly traffic.
 
 == Changelog ==
+= v2.1 =
+* 2025-01-09
+* Banner
+
 = v2.0 =
-2025-01-09
-New version of the app with a new design and the following features:
+* 2025-01-09
+* New version of the app with a new design and the following features:
 * Sign up/log in to the Customer Portal
 * Install accessWidget on your site
 * Customize accessWidget
