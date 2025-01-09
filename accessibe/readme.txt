@@ -1,9 +1,9 @@
 === Web Accessibility By accessiBe ===
-Contributors: accessiBe, WebFactory
+Contributors: accessiBe
 Tags: accessibility, web accessibility, wordpress accessibility, ada, wcag, accessible, a11y
 Requires at least: 4.7
-Tested up to: 6.4
-Stable tag: 1.20
+Tested up to: 6.7
+Stable tag: 2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,59 +12,60 @@ Fix accessibility issues & make your site accessible with an AI-powered accessib
 
 == Description ==
 
-accessWidget, accessiBe’s AI-powered accessibility plugin, helps your WordPress reach and maintain ADA compliance, in adherence to the Web Content Accessibility Guidelines (WCAG). That way, you can expand your audience so that it accounts for members of the various disability communities - a group which consists of close to 29% of adult Americans, and win more business.
+accessWidget, accessiBe's leading AI-powered web accessibility solution, helps make your website accessible and ADA compliant based on WCAG, allowing you to generate more business and traffic.
 
-Following a quick and seamless installation process, accessWidget audits your WordPress website’s code, identifying accessibility barriers and swiftly remediating them. This allows people with various disabilities to access your website using assistive technology like screen readers, or by navigating solely through their keyboard.
+You can explore accessWidget with a 7-day free trial; no credit card required.
 
-Additionally, website visitors are presented with an interface through which they can adjust design and UI elements to better-fit their needs. Examples include stopping animations, increasing font sizes, and adjusting color contrasts, among many other options.
+== Meet legal requirements under the ADA and win more business ==
 
-**accessWidget can help elevate any type of WordPress website, including those built with Elementor and Divi. Additionally, it can transform WooCommerce websites into accessible online stores.**
+Ensuring that your WordPress website is accessible to all visitors, including individuals with disabilities, is critical for a number of reasons.
 
-**You can explore accessWidget during a 7-day free trial; no credit card required**
+First and foremost, adjusting your website so that it is accessible is a moral and ethical imperative. There is also the matter of meeting legal obligations, under laws such as the Americans with Disabilities Act (ADA) and the European Accessibility Act (EAA).
 
-Read the accessiBe reviews and visit [https://accessibe.com](https://accessibe.com) to learn more.
+But it’s important to realize that making your WordPress accessible and ADA-compliant greatly impacts its business potential.
 
-== Accessible themes are not enough. You need a dedicated accessibility solution ==
+**An accessible website allows you to appeal to a new audience base ([which commands trillions in annual expendable income](https://www.thevaluable500.com/press-release/the-valuable-500-releases-new-data-on-global-accessibility-awareness-day#:~:text=Disability%20is%20not%20a%20minority,when%20including%20friends%20and%20family.)), as well as to enhance your brand reputation.**
 
-If you search for accessible themes, you will find more than 200 options to choose from.
+== How accessWidget Helps ==
 
-**Here’s the problem: Even the most accessible theme suffers from some accessibility issues.**
+**With accessWidget, accessiBe's accessibility plugin for ADA compliance, your website is adjusted so that it welcomes all visitors, including those with disabilities.**
 
-Selecting an accessible theme is always a good starting point (and if you’re not currently using one, [you might want to check out this list to find the best options](https://accessibe.com/blog/knowledgebase/ada-compliant-wordpress-themes)).
+accessWidget leverages the power of AI to run an automated audit of your website to identify and remediate accessibility issues existing on a code level. This results in your website being compatible with assistive technology like screen readers, and fully navigable via keyboard.
 
-**To properly address the accessibility issues on your website, you will need to rely on a dedicated accessibility plugin, like accessWidget.**
+**accessWidget is quick and easy to install, and automatically scans and remediates inaccessible elements on your website every 24 hours, ensuring ongoing accessibility, without touching your source code.**
 
-Unlike other accessibility plugins, accessWidget remediates accessibility issues on a code-level, allowing all visitors to navigate your website, including those who use assistive technologies like screen readers, and those who rely on their keyboard,
+== Give website visitors a customized user experience ==
 
-**accessWidget will help resolve the accessibility issues plaguing even the most accessible theme, and help you comply with important legislation, like the ADA.**
+accessWidget will also present website visitors with an accessibility interface, through which they can adjust design elements to better fit their needs.
 
-[youtube https://youtu.be/e2vOikvCWJ4?si=p5sj5RLlz0uqvu45]
+**With accessWidget, website visitors can increase font size and change font types, adjust color contrasts, and stop animations, among many other options.**
 
-== What you get with accessiBe’s WordPress plugin: ==
-
-- AI-powered accessibility testing and remediation
-- A dynamic user interface
-- Customer support
-- Extensive litigation support package
+You can explore the accessWidget plugin with a 7-day free trial; no credit card required.
 
 == FAQ ==
 
-= Is ADA compliance mandatory for your website? =
-The Americans with Disabilities Act (ADA) applies to most public-facing businesses, and includes websites.
+= Does your website need to be ADA-compliant? =
+The Americans with Disabilities Act (ADA) is widely applied to websites. Businesses are categorized as places of public accommodation, and need to make sure they are accessible in compliance with the law.
 
-= How does accessiBe and accessWidget help your website reach ADA compliance? =
-Once installed on your website, accessWidget will audit its code and identify accessibility problems. Then, it will remediate many of the issues so that your website conforms with the Web Content Accessibility Guidelines (WCAG).
+= How do accessiBe and accessWidget help your website reach ADA compliance? =
+Once installed on your website, accessWidget will audit its code and identify accessibility problems. Then, it will perform session-based remediations of many of the issues so that your website is accessible based on the Web Content Accessibility Guidelines (WCAG).
 
-= Isn’t my WordPress website accessible by default? =
-No. For your website to be considered accessible, you will need to audit accessibility appearing on it and then remediate them.
-
-= Can accessWidget be used during a free trial? =
-Yes. You can use accessWidget for free during a 7 day free trial.
+= Can I explore accessWidget during a free trial? =
+Yes. You can use accessWidget for free during a 7-day free trial.
 
 = How much do paid plans cost? =
-Prices depend on the traffic your website generates. Subscriptions start at $490 a year ($59/mo).
+Plans start at $490 a year (or $59/mo), and vary depending on your website’s monthly traffic.
 
 == Changelog ==
+= v2.0 =
+2025-01-09
+New version of the app with a new design and the following features:
+* Sign up/log in to the Customer Portal
+* Install accessWidget on your site
+* Customize accessWidget
+* Accessibility statement
+* Purchasing a plan
+
 = v1.20 =
 * 2024-11-12
 * readme update

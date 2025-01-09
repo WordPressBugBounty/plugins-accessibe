@@ -1,0 +1,29 @@
+/**
+ * accessiBe
+ * https://accessibe.com/
+ */
+
+ #wpcontent {
+  background: #fff;
+  padding: 0;
+  height: 91vh;
+}
+
+#wpbody, #wpbody-content, .wrap {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.wrap iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Media Query for small screens (600px or less) */
+@media screen and (max-width: 600px) {
+  .wrap iframe {
+    margin-block-start: 46px;
+  }
+}
