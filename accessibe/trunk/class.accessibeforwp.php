@@ -605,6 +605,8 @@ class AccessibeWp {
         </div>
         <?php
         if (!isset($accessibe_options['isLoggedOutOnce'])) {
+            $accessibe_options['isLoggedOutOnce'] = true;
+            update_option(ACCESSIBE_WP_OPTIONS_KEY, json_encode($accessibe_options));
            echo "<script>
            window.addEventListener('message', (event) => {
             if(event.data.eventName == 'iframe-ready') {
@@ -618,9 +620,6 @@ class AccessibeWp {
                 }, 1000);
             }});
            </script>";
-           $accessibe_options['isLoggedOutOnce'] = true;
-
-           update_option(ACCESSIBE_WP_OPTIONS_KEY, json_encode($accessibe_options));
         }
         ?>
         <!-- /.wrap -->
