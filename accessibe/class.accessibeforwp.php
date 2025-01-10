@@ -509,13 +509,16 @@ class AccessibeWp {
   public static function accessibe_get_options() {
       // Attempt to retrieve and decode options using ACCESSIBE_OPTIONS_KEY
       $accessibe_options = get_option(ACCESSIBE_WP_OPTIONS_KEY, array());
+      $isLoggedOutOnce = false;
       if(!empty($accessibe_options)) {
         $accessibe_options = json_decode($accessibe_options, true);
+        $isLoggedOutOnce = $accessibe_options['isLoggedOutOnce'];
       }
 
       // If decoding fails or ACCESSIBE_OPTIONS_KEY does not exist, fallback to ACCESSIBE_OLD_OPTIONS_KEY
       if(empty($accessibe_options) || !isset($accessibe_options['script'])) {
           $accessibe_options = get_option(ACCESSIBE_WP_OLD_OPTIONS_KEY, array());
+          $accessibe_options['isLoggedOutOnce'] = $isLoggedOutOnce;
       }
 
       return $accessibe_options;
@@ -604,7 +607,7 @@ class AccessibeWp {
             <iframe id='accessibe-universal-iframe' src='https://universal.accessibe.com'></iframe>
         </div>
         <?php
-        if (!isset($accessibe_options['isLoggedOutOnce'])) {
+        if ($accessibe_options['isLoggedOutOnce'] != true) {
            echo "<script>
            window.addEventListener('message', (event) => {
             if(event.data.eventName == 'iframe-ready') {
