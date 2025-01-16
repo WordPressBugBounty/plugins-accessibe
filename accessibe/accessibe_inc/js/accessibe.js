@@ -85,11 +85,6 @@ const API = {
   syncMerchantDetails: async () => {
     if (AcsbStore.jQueryReady && AcsbStore.isIframeReady) {
       const url = new URL(window.location);
-      // if (url.searchParams.get('newLicense') === 'true') {
-      //   url.searchParams.delete('newLicense');
-      //   window.history.replaceState(null, '', url.toString());
-      //   AcsbStore.additionalData.isTrialPopup = true;
-      // }
       API.setMerchant(await API.fetchMerchantDetails());
       API.sendMerchantDetails();
       API.sendRedirectUrl(window.location.href);
@@ -122,27 +117,21 @@ window.addEventListener('message', async (event) => {
         await API.syncMerchantDetails();
         break;
       case 'signup':
-        API.setMerchant(event.data.data);
         await API.signup(event.data.data);
+        await API.syncMerchantDetails();
         break;
       case 'login':
-        API.setMerchant(event.data.data);
         await API.login(event.data.data);
-        // await API.syncMerchantDetails();
+        await API.syncMerchantDetails();
         break;
       case 'logout':
         await API.logOut();
-        // await API.syncMerchantDetails();
+        await API.syncMerchantDetails();
         break;
       case 'license-trial': {
-        const data = await API.sendLicenseData(event.data.data);
-        console.log('license-trial response ::', data);
-        // if(event.data.reload && event.data.newLicense) {
-        //   await API.syncMerchantDetails();
-        // }
-        /*else*/ if (event.data.reload) {
-          await API.syncMerchantDetails();
-        }
+        const data = await API.sendLicenseData({...event.data.data, newLicense: event.data.newLicense});
+        console.log('license-trial response ::', data); 
+        await API.syncMerchantDetails();
         break;
       }
       case 'domain-list':

@@ -148,12 +148,13 @@ class AccessibeWp {
    */
     public static function accessibe_render_js_in_footer() {
         $accessibe_options = self::accessibe_get_options();
-        $current_domain = self::removeWWW(wp_parse_url(site_url())['host']);
+        $current_domain = self::sanitizeDomain(wp_parse_url(site_url())['host']);
         // $current_domain = '9cc3-2405-201-5c0f-d070-14fd-b303-b02-1999.ngrok-free.app';
         
         if ((!isset($accessibe_options['accessibe']) && (!isset($accessibe_options['script']) || !isset($accessibe_options['script'][$current_domain]))) 
             || (isset($accessibe_options['accessibe']) && 'enabled' != $accessibe_options['accessibe'] && (!isset($accessibe_options['script']) || !isset($accessibe_options['script'][$current_domain]))) 
             || (isset($accessibe_options["script"][$current_domain]) && $accessibe_options["script"][$current_domain]['widgetStatus'] != true)) {
+            echo "<script>console.log(".json_encode($accessibe_options).")</script>";
             return false;
         }
 
@@ -170,7 +171,7 @@ class AccessibeWp {
             $accessibe_options['triggerIcon'] = self::$icon_mapping_to_widget[$icon_value];
         }
 
-            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.defer=true;s.onload=function(){acsbJS.init({
+            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.setAttribute('data-source', 'WordPress');s.defer=true;s.onload=function(){acsbJS.init({
                 statementLink     : '" . esc_url($accessibe_options['statementLink']) . "',
                 footerHtml        : '" . esc_html($accessibe_options['footerHtml']) . "',
                 hideMobile        : " . esc_html($accessibe_options['hideMobile']) . ",
@@ -226,7 +227,7 @@ class AccessibeWp {
             'userId' => $current_user->ID,
             'email' => $current_user->user_email,
             'fullName' => $current_user->display_name,
-            'storeId' => self::removeWWW(wp_parse_url(site_url())['host']),
+            'storeId' => self::sanitizeDomain(wp_parse_url(site_url())['host']),
             // 'storeId' => '9cc3-2405-201-5c0f-d070-14fd-b303-b02-1999.ngrok-free.app'
         );
         
@@ -246,7 +247,7 @@ class AccessibeWp {
     public static function accessibe_domain_list_ajax() {
         $existing_domains = json_decode(stripslashes($_POST['existingDomains']));
 
-        $current_domain = self::removeWWW(wp_parse_url(site_url())['host']);
+        $current_domain = self::sanitizeDomain(wp_parse_url(site_url())['host']);
         // $current_domain = '9cc3-2405-201-5c0f-d070-14fd-b303-b02-1999.ngrok-free.app';
 
         $domains_list = array();
@@ -333,7 +334,7 @@ class AccessibeWp {
             $modified_config = $data_decoded->widgetConfig ?? json_decode(json_encode(self::$DEFAULT_WIDGET_CONFIG));
 			$modified_status = true;
             if(!empty($old_data)) {
-				$modified_status = 'enabled' == $old_data['accessibe'];
+				$modified_status = $data_decoded->newLicense ? true : 'enabled' == $old_data['accessibe'];
                 $modified_config = self::modify_old_data($old_data);
                 delete_option(ACCESSIBE_WP_OLD_OPTIONS_KEY);
             }
@@ -448,10 +449,10 @@ class AccessibeWp {
         return $accessibe_text;
     } // accessibe_admin_footer_text
 
-    public static function removeWWW($domain) {
+    public static function sanitizeDomain($domain) {
         // Use regex to replace "www." only at the beginning
-        return preg_replace("/^www\./", "", $domain);
-    } // removeWWW
+        return preg_replace("/^www\./", "", strtolower($domain));
+    } // sanitizeDomain
 
 
   /**
@@ -684,7 +685,7 @@ class AccessibeWp {
             $uuid = self::generateUuidV4();
             $current_user = wp_get_current_user();
             $mixpanelHandler = new MixpanelHandler();
-            $mixpanelHandler->trackEvent('pluginInstalled', ['$device_id' => $uuid, 'primaryDomain' => self::removeWWW(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
+            $mixpanelHandler->trackEvent('pluginInstalled', ['$device_id' => $uuid, 'primaryDomain' => self::sanitizeDomain(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
             $current_data['isInstalled'] = true;
             $current_data['mixpanelUUID'] = $uuid;
             update_option(ACCESSIBE_WP_OPTIONS_KEY, json_encode($current_data));
@@ -696,12 +697,12 @@ class AccessibeWp {
         $current_user = wp_get_current_user();
         $mixpanelHandler = new MixpanelHandler();
         if(isset($current_data['acsbuserId'])) {
-            $mixpanelHandler->trackEvent('pluginInstalled', ['userId' => $current_data['acsbuserId'], 'primaryDomain' => self::removeWWW(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
+            $mixpanelHandler->trackEvent('pluginInstalled', ['userId' => $current_data['acsbuserId'], 'primaryDomain' => self::sanitizeDomain(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
         }
         else {
-            $mixpanelHandler->trackEvent('pluginInstalled', ['$device_id' => $current_data['mixpanelUUID'], 'primaryDomain' => self::removeWWW(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
+            $mixpanelHandler->trackEvent('pluginInstalled', ['$device_id' => $current_data['mixpanelUUID'], 'primaryDomain' => self::sanitizeDomain(wp_parse_url(site_url())['host']), 'wp_id' => $current_user->ID, 'wp_email' => $current_user->user_email, 'wp_username' => $current_user->user_login, 'wp_display_name' => $current_user->display_name ]);
         }
-        $mixpanelHandler->trackEvent('pluginUninstalled', ['primaryDomain' => self::removeWWW(wp_parse_url(site_url())['host'])]);
+        $mixpanelHandler->trackEvent('pluginUninstalled', ['primaryDomain' => self::sanitizeDomain(wp_parse_url(site_url())['host'])]);
         delete_option(ACCESSIBE_WP_OPTIONS_KEY);
         delete_option(ACCESSIBE_WP_POINTERS_KEY);
     } // uninstall
