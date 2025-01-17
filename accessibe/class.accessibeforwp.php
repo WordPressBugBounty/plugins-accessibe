@@ -174,7 +174,7 @@ class AccessibeWp {
             $accessibe_options['triggerIcon'] = self::$icon_mapping_to_widget[$icon_value];
         }
 
-            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.setAttribute('data-source', 'WordPress');s.setAttribute('data-plugin-version', ".self::accessibe_get_plugin_version().");s.defer=true;s.onload=function(){acsbJS.init({
+            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.setAttribute('data-source', 'WordPress');s.setAttribute('data-plugin-version', '".self::accessibe_get_plugin_version()."');s.defer=true;s.onload=function(){acsbJS.init({
                 statementLink     : '" . esc_url($accessibe_options['statementLink']) . "',
                 footerHtml        : '" . esc_html($accessibe_options['footerHtml']) . "',
                 hideMobile        : " . esc_html($accessibe_options['hideMobile']) . ",
