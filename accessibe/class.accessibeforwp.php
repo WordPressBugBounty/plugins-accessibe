@@ -155,6 +155,9 @@ class AccessibeWp {
             || (isset($accessibe_options['accessibe']) && 'enabled' != $accessibe_options['accessibe'] && (!isset($accessibe_options['script']) || !isset($accessibe_options['script'][$current_domain]))) 
             || (isset($accessibe_options["script"][$current_domain]) && $accessibe_options["script"][$current_domain]['widgetStatus'] != true)) {
             echo "<script>console.log(".json_encode($accessibe_options).")</script>";
+        }
+
+        if (isset($accessibe_options["script"][$current_domain]) && $accessibe_options["script"][$current_domain]['widgetStatus'] != true) {
             return false;
         }
 
@@ -171,7 +174,7 @@ class AccessibeWp {
             $accessibe_options['triggerIcon'] = self::$icon_mapping_to_widget[$icon_value];
         }
 
-            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.setAttribute('data-source', 'WordPress');s.defer=true;s.onload=function(){acsbJS.init({
+            echo "<script>(function(){var s=document.createElement('script');e = !document.body ? document.querySelector('head'):document.body;s.src='https://acsbapp.com/apps/app/dist/js/app.js';s.setAttribute('data-source', 'WordPress');s.setAttribute('data-plugin-version', ".self::accessibe_get_plugin_version().");s.defer=true;s.onload=function(){acsbJS.init({
                 statementLink     : '" . esc_url($accessibe_options['statementLink']) . "',
                 footerHtml        : '" . esc_html($accessibe_options['footerHtml']) . "',
                 hideMobile        : " . esc_html($accessibe_options['hideMobile']) . ",
@@ -334,7 +337,7 @@ class AccessibeWp {
             $modified_config = $data_decoded->widgetConfig ?? json_decode(json_encode(self::$DEFAULT_WIDGET_CONFIG));
 			$modified_status = true;
             if(!empty($old_data)) {
-				$modified_status = $data_decoded->newLicense ? true : 'enabled' == $old_data['accessibe'];
+				// $modified_status = $data_decoded->newLicense ? true : 'enabled' == $old_data['accessibe'];
                 $modified_config = self::modify_old_data($old_data);
                 delete_option(ACCESSIBE_WP_OLD_OPTIONS_KEY);
             }
