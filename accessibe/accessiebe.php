@@ -1,30 +1,95 @@
 <?php
-/*
-Plugin Name: Web Accessibility by accessiBe
-Plugin URI: https://accessibe.com/
-Description: accessiBe is the #1 fully automated web accessibility solution. Protect your website from lawsuits and increase your potential audience.
-Version: 1.20
-Author: accessiBe
-Author URI: https://accessibe.com/
-License: GPLv2 or later
-Text Domain: accessibe
-*/
+/**
+ * My Plugin old main file upgrade routine
+ *
+ * This is the old plugin main file.
+ * Keep it for backward upgrade compatibility.
+ *
+ * @package Web Accessibility by accessiBe (older version)
+ */
 
-// this is an include only WP file
-if (!defined('ABSPATH')) {
-  die;
+defined('WPINC') || die;
+
+require 'vendor/autoload.php';
+use Mixpanel\Mixpanel;
+
+// Hook into WordPress after it has loaded fully
+add_action('plugins_loaded', 'handle_plugin_upgrade');
+
+function handle_plugin_upgrade() {
+    $old = 'accessiebe.php'; 
+    $new = 'accessibe.php';
+
+    $active_plugins = (array) get_option('active_plugins', array());
+
+    $old_plugin_path = basename(__DIR__) . '/' . $old;
+    $new_plugin_path = basename(__DIR__) . '/' . $new;
+
+    // Only proceed if the old plugin is active.
+    if (in_array($old_plugin_path, $active_plugins)) {
+        // Remove the old plugin from the active plugins list.
+        $active_plugins = array_diff($active_plugins, array($old_plugin_path));
+
+        // Add the new plugin to the active plugins list if it's not already there.
+        if (!in_array($new_plugin_path, $active_plugins)) {
+            $active_plugins[] = $new_plugin_path;
+
+            // Include the new plugin file to ensure it is initialized.
+            include_once __DIR__ . '/' . $new;
+        }
+
+        // Update the active plugins option in the database.
+        update_option('active_plugins', $active_plugins);
+
+        track_plugin_upgrade();
+    }
 }
 
-define('ACCESSIBE_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('ACCESSIBE_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('ACCESSIBE_BASENAME', plugin_basename(__FILE__));
-define('ACCESSIBE_FILE', __FILE__);
-define('ACCESSIBE_OPTIONS_KEY', 'accessibe_options');
-define('ACCESSIBE_POINTERS_KEY', 'accessibe_pointers');
+function track_plugin_upgrade() {
+    $uuid = generateUuidV4();
+    $current_user = wp_get_current_user();
 
-require_once(ACCESSIBE_PLUGIN_DIR . 'class.accessibe.php');
+    if (!$current_user || empty($current_user->ID)) {
+        return;
+    }
 
-register_activation_hook(__FILE__, array('Accessibe', 'activate'));
-register_uninstall_hook(__FILE__, array('Accessibe', 'uninstall'));
+    $mixpanelHandler = new MixpanelHandler();
+    $mixpanelHandler->trackEvent(
+        'pluginUpgraded',
+        [
+            '$device_id' => $uuid,
+            'pluginVersion' => accessibe_get_plugin_version(),
+            'wordpressStoreName' => sanitizeDomain(wp_parse_url(site_url())['host']),
+            'wordpressPluginVersionNumber' => accessibe_get_plugin_version(),
+            'wordpressAccountUserID' => $current_user->ID,
+            'wordpressUserEmail' => $current_user->user_email,
+            'wordpressUsername' => $current_user->user_login
+        ]
+    );
 
-Accessibe::init();
+    $current_data = [
+        'mixpanelUUID' => $uuid,
+        'pluginVersion' => accessibe_get_plugin_version(),
+    ];
+    update_option('accessibeforwp_options', json_encode($current_data));
+}
+
+function generateUuidV4() {
+    $data = random_bytes(16);
+
+    // Set version to 4 and variant to 10xx
+    $data[6] = chr((ord($data[6]) & 0x0f) | 0x40);
+    $data[8] = chr((ord($data[8]) & 0x3f) | 0x80);
+
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
+function sanitizeDomain($domain) {
+    // Use regex to replace "www." only at the beginning
+    return preg_replace("/^www\./", "", strtolower($domain));
+}
+
+function accessibe_get_plugin_version() {
+    $accessibe_plugin_data = get_file_data(ACCESSIBE_WP_FILE, ['version' => 'Version'], 'plugin');
+    return $accessibe_plugin_data['version'];
+}

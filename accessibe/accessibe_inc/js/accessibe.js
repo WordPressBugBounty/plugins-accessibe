@@ -82,10 +82,23 @@ const API = {
   sendRedirectUrl: (redirectUrl) => {
     API.sendDataToIframe('redirect-url', redirectUrl);
   },
-  syncMerchantDetails: async () => {
+  syncMerchantDetails: async (shouldLogout = false) => {
     if (AcsbStore.jQueryReady && AcsbStore.isIframeReady) {
       const url = new URL(window.location);
-      API.setMerchant(await API.fetchMerchantDetails());
+      const merchantData = await API.fetchMerchantDetails();
+      if(!merchantData.acsbUserId && shouldLogout) {
+        const iframeRef = document.getElementById('accessibe-universal-iframe');
+          if (iframeRef) {
+            iframeRef.contentWindow.postMessage(
+                { eventName: 'request-logout', data: {} },
+                '*'
+            );
+          }
+      }
+      else if (merchantData.acsbUserId) {
+        delete merchantData['acsbUserId'];
+      }
+      API.setMerchant(merchantData);
       API.sendMerchantDetails();
       API.sendRedirectUrl(window.location.href);
     }
@@ -114,7 +127,7 @@ window.addEventListener('message', async (event) => {
     switch (event.data.eventName) {
       case 'iframe-ready':
         AcsbStore.isIframeReady = true;
-        await API.syncMerchantDetails();
+        await API.syncMerchantDetails(true);
         break;
       case 'signup':
         await API.signup(event.data.data);

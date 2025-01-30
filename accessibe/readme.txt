@@ -3,7 +3,7 @@ Contributors: accessiBe
 Tags: accessibility, web accessibility, wordpress accessibility, ada, wcag, accessible, a11y
 Requires at least: 4.7
 Tested up to: 6.7
-Stable tag: 2.3.3
+Stable tag: 2.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -56,7 +56,21 @@ Yes. You can use accessWidget for free during a 7-day free trial.
 = How much do paid plans cost? =
 Plans start at $490 a year (or $59/mo), and vary depending on your website’s monthly traffic.
 
+== Installation ==
+1. Download the plugin file.
+2. In your WordPress dashboard go to **Plugins** > **Add New** > **Upload Plugin** and select the file you downloaded in the previous step.
+3. Select **Install Now**. Once it’s installed, the **Install Now** button will change to Activate.
+4. Select **Activate**.
+5. Sign up to accessiBe in the plugin. If you already have an account, select **Log in**.
+6. Select the domain to **start your 7-day free trial**.
+
+See [here](https://accessibe.com/support/installation/how-to-install-accessibe-on-a-wordpress-website) for details.
+
 == Changelog ==
+= v2.4 =
+* 2025-01-30
+* Analytics and bug fixes
+
 = v2.3.3 =
 * 2025-01-18
 * Bug fixes
