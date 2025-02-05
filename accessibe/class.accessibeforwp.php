@@ -27,6 +27,7 @@ class AccessibeWp {
         'mobileTriggerOffsetX' => '10',
         'mobileTriggerOffsetY' => '10',
         'statementLink' => '',
+        'footerHtml' => '',
     ];
 
     public static $DEFAULT_WIDGET_CONFIG_FOR_SCRIPT = [
@@ -50,6 +51,7 @@ class AccessibeWp {
         'mobileTriggerOffsetX' => 10,
         'mobileTriggerOffsetY' => 10,
         'statementLink' => '',
+        'footerHtml' => '',
     ];
 
     public static $icon_mapping_to_widget = [
@@ -82,7 +84,7 @@ class AccessibeWp {
         add_action('admin_menu', array('AccessibeWp', 'accessibe_options_page'));
 
         /* Register settings */
-        // add_action('admin_init', array('AccessibeWp', 'accessibe_register_settings'));
+        add_action('plugins_loaded', array('AccessibeWp', 'manage_redirect'));
 
         /* Render js in footer */
         add_action('wp_footer', array('AccessibeWp', 'accessibe_render_js_in_footer'));
@@ -127,6 +129,15 @@ class AccessibeWp {
 
     } // accessibe_init_hooks
 
+
+    public static function manage_redirect() {
+        $old_page_slug = 'accessiBe';  // Slug for the old settings page
+    
+        if (isset($_GET['page']) && $_GET['page'] === $old_page_slug && strpos($_SERVER['REQUEST_URI'], 'options-general.php') !== false) {
+            wp_redirect(admin_url('admin.php?page=accessibe'));
+            exit();
+        }
+    }
 
   /**
    * Get plugin version
@@ -276,9 +287,9 @@ class AccessibeWp {
             $detail['acsbUserId'] = $current_user_options->acsbUserId;
         }
         
-        $active_license_id = $current_user_options->activeLicenseId;
         // Conditionally add fields if isLoggedIn is true
         if (isset($current_user_options->activeLicenseId) && isset($current_user_options->licenses) && $current_user_options->activeLicenseId != '') {
+            $active_license_id = $current_user_options->activeLicenseId;
             $detail['licenseId'] = $current_user_options->licenses->$active_license_id->licenseId;
             $detail['widgetStatus'] = $current_user_options->licenses->$active_license_id->widgetStatus;
             $detail['widgetConfig'] = $current_user_options->licenses->$active_license_id->widgetConfig;
@@ -379,8 +390,13 @@ class AccessibeWp {
             $modified_config = $data_decoded->widgetConfig ?? json_decode(json_encode(self::$DEFAULT_WIDGET_CONFIG));
 			$modified_status = true;
             if(!empty($old_data)) {
-				// $modified_status = $data_decoded->newLicense ? true : 'enabled' == $old_data['accessibe'];
-                $modified_config = self::modify_old_data($old_data);
+                if(!is_array($old_data)) {
+                    $old_data = array();
+                }
+                else{ 
+                    // $modified_status = $data_decoded->newLicense ? true : 'enabled' == $old_data['accessibe'];
+                    $modified_config = self::modify_old_data($old_data);
+                }
                 delete_option(ACCESSIBE_WP_OLD_OPTIONS_KEY);
             }
             $license_data = (object) [
@@ -564,6 +580,9 @@ class AccessibeWp {
       // If decoding fails or ACCESSIBE_OPTIONS_KEY does not exist, fallback to ACCESSIBE_OLD_OPTIONS_KEY
       if(empty($accessibe_options) || !isset($accessibe_options['script'])) {
           $older_options = get_option(ACCESSIBE_WP_OLD_OPTIONS_KEY, array());
+          if (!is_array($older_options)) {
+            $older_options = array();
+          }
           $accessibe_options = array_merge($accessibe_options, $older_options);
       }
 
@@ -710,6 +729,8 @@ class AccessibeWp {
 
     $plugin_basename = ACCESSIBE_WP_BASENAME;
 
+    error_log(json_encode($hook_extra));
+
     // Check if the hook involves updating plugins.
     if (
         isset($hook_extra['action'], $hook_extra['type']) &&
@@ -750,6 +771,7 @@ class AccessibeWp {
 
     // Check if the plugin was recently updated.
     $previous_version = get_transient('accessibe_previous_version');
+    error_log($previous_version);
     if ($previous_version) {
         // Delete the transient after fetching its value.
         delete_transient('accessibe_previous_version');
