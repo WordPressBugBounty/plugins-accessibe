@@ -37,7 +37,7 @@ function handle_plugin_upgrade() {
             // Include the new plugin file to ensure it is initialized.
             include_once __DIR__ . '/' . $new;
         }
-
+        
         // Update the active plugins option in the database.
         update_option('active_plugins', $active_plugins);
 
