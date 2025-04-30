@@ -55,22 +55,23 @@ class AccessibeWp {
     ];
 
     public static $icon_mapping_to_widget = [
-            "LegacyDisplay" => "display",
-            "LegacyDisplay2" => "display2",
-            "LegacyDisplay3" => "display3",
-            "LegacyHelp" => "help",
-            "LegacyPeople" => "people",
-            "LegacyPeople2" => "people2",
-            "LegacySettings" => "settings",
-            "LegacySettings2" => "settings2",
-            "LegacyWheels" => "wheels",
-            "LegacyWheels2" => "wheels2",
+      "LegacyDisplay" => "display",
+      "LegacyDisplay2" => "display2",
+      "LegacyDisplay3" => "display3",
+      "LegacyHelp" => "help",
+      "LegacyPeople" => "people",
+      "LegacyPeople2" => "people2",
+      "LegacySettings" => "settings",
+      "LegacySettings2" => "settings2",
+      "LegacyWheels" => "wheels",
+      "LegacyWheels2" => "wheels2",
     ];
 
     public static function accessibe_init() {
-        if (!self::$accessibe_initiated) {
-            self::accessibe_init_hooks();
-        }
+      if (!self::$accessibe_initiated) {
+        self::accessibe_init_hooks();
+        self::accessibe_get_plugin_version();
+      }
     } // accessibe_init
 
 
@@ -126,7 +127,8 @@ class AccessibeWp {
 
         /* update admin footer text */
         add_filter('admin_footer_text', array('AccessibeWp', 'accessibe_admin_footer_text'));
-
+        /* add verification file */
+		add_action('wp_ajax_accessibe_add_verification_page', array('AccessibeWp', 'accessibe_add_verification_page_ajax'));
     } // accessibe_init_hooks
 
 
@@ -143,9 +145,12 @@ class AccessibeWp {
    * Get plugin version
    */
     public static function accessibe_get_plugin_version() {
-        $accessibe_plugin_data = get_file_data(ACCESSIBE_WP_FILE, array('version' => 'Version'), 'plugin');
-        self::$accessibe_version = $accessibe_plugin_data['version'];
-        return $accessibe_plugin_data['version'];
+      if (isset(self::$accessibe_version)) {
+        return self::$accessibe_version;
+      }
+      $accessibe_plugin_data = get_file_data(ACCESSIBE_WP_FILE, array('version' => 'Version'), 'plugin');
+      self::$accessibe_version = $accessibe_plugin_data['version'];
+      return $accessibe_plugin_data['version'];
     } // accessibe_get_plugin_version
 
   /**
@@ -209,8 +214,8 @@ class AccessibeWp {
                     }
                 }
             }
-            $icon_value = $accessibe_options['triggerIcon'];
-            $accessibe_options['triggerIcon'] = self::$icon_mapping_to_widget[$icon_value];
+            $icon_value = isset($accessibe_options['triggerIcon']) ? $accessibe_options['triggerIcon'] : '';
+            $accessibe_options['triggerIcon'] = isset(self::$icon_mapping_to_widget[$icon_value]) ? self::$icon_mapping_to_widget[$icon_value] : 'people';
         }
 
         $accessibe_options = array_merge(self::$DEFAULT_WIDGET_CONFIG_FOR_SCRIPT, $accessibe_options);
@@ -262,6 +267,42 @@ class AccessibeWp {
         delete_option(ACCESSIBE_WP_POINTERS_KEY);
     } // accessibe_dismiss_pointer_ajax
 
+    /**
+     * Add ownership verification file
+     */
+    public static function accessibe_add_verification_page_ajax() {
+		$file_name = 'accessibe_verification.txt';
+		$verificationData = json_decode(stripslashes($_POST['data']));
+		$file_path = ABSPATH . $file_name; // Path to the public file
+		$token = $verificationData->token;
+		$result = array(
+			'type' => esc_html('FILE_URL'),
+			'path' => '',
+			'domain' => self::get_current_domain(),
+		);
+    if (file_put_contents($file_path, $token)) {
+			$result['path'] = site_url($file_name) . '?v=' . time();
+    } else {
+			$result['failed-1'] = $file_path;
+			// Get uploads directory path and URL
+			$upload_dir = wp_upload_dir();
+			$dir_path = trailingslashit($upload_dir['basedir']) . 'accessibe';
+			$file_path = $dir_path . '/' . $file_name;
+	
+			// Ensure directory exists
+			if (!file_exists($dir_path)) {
+				wp_mkdir_p($dir_path);
+			}
+	
+			if (file_put_contents($file_path, $token)) {
+				$result['path'] = trailingslashit($upload_dir['baseurl']) . 'accessibe' . '/' . $file_name . '?v=' . time();
+			} else {
+				$result['failed-2'] = $file_path;
+			}
+		}
+		echo json_encode($result);
+		wp_die();
+	} // accessibe_add_verification_page_ajax
 
     public static function accessibe_merchant_detail_ajax() {
         $current_user = wp_get_current_user();
@@ -277,6 +318,10 @@ class AccessibeWp {
             'email' => $user_email,
             'fullName' => $display_name,
             'storeId' => self::sanitizeDomain(wp_parse_url(site_url())['host']),
+            'wapperApp' => array(
+              'name' => 'WordPress',
+              'version' => self::accessibe_get_plugin_version() . ''
+            ),
             'mixpanelProps' => array (
                 'wordpressStoreName' => self::sanitizeDomain(wp_parse_url(site_url())['host']),
                 'wordpressPluginVersionNumber' => self::accessibe_get_plugin_version() . '',
@@ -304,10 +349,15 @@ class AccessibeWp {
         wp_die();
     } // accessibe_merchant_detail_ajax
 
+    public static function get_current_domain() {
+        $current_domain = wp_parse_url(site_url())['host'];
+        return self::sanitizeDomain($current_domain);
+    }
+    
     public static function accessibe_domain_list_ajax() {
         $existing_domains = json_decode(stripslashes($_POST['existingDomains']));
 
-        $current_domain = self::sanitizeDomain(wp_parse_url(site_url())['host']);
+        $current_domain = self::get_current_domain();
         // $current_domain = '9cc3-2405-201-5c0f-d070-14fd-b303-b02-1999.ngrok-free.app';
 
         $domains_list = array();
@@ -690,7 +740,7 @@ class AccessibeWp {
         }
         ?>
         <div class="wrap">
-            <iframe id='accessibe-universal-iframe' src='https://universal.accessibe.com'></iframe>
+        <iframe id='accessibe-universal-iframe' src='<?php echo esc_url_raw(ACCESSIBE_WP_UNIVERSAL_URL . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')); ?>'></iframe>
         </div>
         <!-- /.wrap -->
         <?php

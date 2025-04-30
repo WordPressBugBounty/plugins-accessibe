@@ -43,6 +43,15 @@ const API = {
        })
     );
   },
+  sendAddVerificationPageRequest: async (data) => {
+    return JSON.parse(
+      await jQuery.post(ajaxurl, {
+        _ajax_nonce: accessibe_vars.run_tool_nonce,
+        data: JSON.stringify(data),
+        action: "accessibe_add_verification_page",
+      })
+    );
+  },
   logOut: async () => {
    return JSON.parse(
       await jQuery.get(ajaxurl, {
@@ -105,24 +114,28 @@ const API = {
   },
   setMerchant: (data) => {
     AcsbStore.merchantData = data;
-    console.log("setting merchant data", data);
+    Logger.log("setting merchant data", data);
     //sendMerchantDetails();
   },
   sendDataToIframe: (eventName, data, additionalData={}) => {
     document.getElementById(ACSB_UNI_IFRAME_ID).contentWindow.postMessage({ eventName, data, additionalData }, '*');
-    console.log(eventName, data);
-  }
+    Logger.log(eventName, data);
+  },
+  sendDomainVerificationRequest: (type, path, domain) => {
+    API.sendDataToIframe('domain-verification-request', { type, path, domain });
+  },
 }
 jQuery(document).ready(async ($) => {
   AcsbStore.jQueryReady = true;
-  console.log("accessibe.js loaded");
+  Logger.log("accessibe.js loaded");
   await API.syncMerchantDetails();
+  API.sendRedirectUrl(window.location.href);
 });
 
 window.addEventListener('message', async (event) => {
     let response;
     if (event.data.eventName){
-      console.log(event.data.eventName, event.data);
+      Logger.log(event.data.eventName, event.data);
     }
     switch (event.data.eventName) {
       case 'iframe-ready':
@@ -142,8 +155,15 @@ window.addEventListener('message', async (event) => {
         await API.syncMerchantDetails();
         break;
       case 'license-trial': {
-        const data = await API.sendLicenseData({...event.data.data, newLicense: event.data.newLicense});
-        console.log('license-trial response ::', data); 
+        const data = await API.sendLicenseData({
+          licenseId: event.data.data.licenseId,
+          accountId: event.data.data.accountId,
+          domain: event.data.data.domain,
+          widgetConfig: event.data.data.widgetConfig,
+          siteId: event.data.data.siteId,
+          isNewLicenseTrial: event.data.data.isNewLicenseTrial,
+        });
+        Logger.log('license-trial response ::', data); 
         await API.syncMerchantDetails();
         break;
       }
@@ -160,4 +180,47 @@ window.addEventListener('message', async (event) => {
       case 'modify-config':
         await API.modifyConfig(event.data.data.widgetConfig);
         break;
+      case 'redirect-to-url':
+        const { add_redirect_url_with_key: redirectUrlKey, url: targetUrl } = event.data.data;
+        const urlToRedirect = new URL(targetUrl);
+        if (redirectUrlKey) {
+          urlToRedirect.searchParams.set(redirectUrlKey, window.location.href);
+        }
+        window.location.href = urlToRedirect.href;
+        break;
+      case 'remove-query-param':
+        const paramToremove = event.data.data.param;
+        const url = new URL(window.location.href);
+        url.searchParams.delete(paramToremove);
+        window.history.replaceState({}, document.title, url);
+        break;
+      case 'create-domain-ownership-request':
+        const res = await API.sendAddVerificationPageRequest(event.data.data);
+        API.sendDomainVerificationRequest(res.type, res.path, res.domain);
+        Logger.log("verify-ownership response", res);
+        break;
+      default:
+        break;
   }});
+
+const isDebugMode = localStorage.getItem('debug') === 'true';
+
+const Logger = {
+  log(message, ...optionalParams) {
+    if (isDebugMode) {
+      console.log(`.[INFO] ${message}`, ...optionalParams);
+    }
+  },
+
+  error(message, ...optionalParams) {
+    if (isDebugMode) {
+      console.error(`.[ERROR] ${message}`, ...optionalParams);
+    }
+  },
+
+  debug(message, ...optionalParams) {
+    if (isDebugMode) {
+      console.debug(`.[DEBUG] ${message}`, ...optionalParams);
+    }
+  },
+};
