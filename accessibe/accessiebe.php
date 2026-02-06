@@ -14,9 +14,9 @@ require 'vendor/autoload.php';
 use Mixpanel\Mixpanel;
 
 // Hook into WordPress after it has loaded fully
-add_action('plugins_loaded', 'handle_plugin_upgrade');
+add_action('plugins_loaded', 'accessibe_handle_plugin_upgrade');
 
-function handle_plugin_upgrade() {
+function accessibe_handle_plugin_upgrade() {
     $old = 'accessiebe.php'; 
     $new = 'accessibe.php';
 
@@ -41,12 +41,12 @@ function handle_plugin_upgrade() {
         // Update the active plugins option in the database.
         update_option('active_plugins', $active_plugins);
 
-        track_plugin_upgrade();
+        accessibe_track_plugin_upgrade();
     }
 }
 
-function track_plugin_upgrade() {
-    $uuid = generateUuidV4();
+function accessibe_track_plugin_upgrade() {
+    $uuid = accessibe_generateUuidV4();
     $current_user = wp_get_current_user();
 
     if (!$current_user || empty($current_user->ID)) {
@@ -59,7 +59,7 @@ function track_plugin_upgrade() {
         [
             '$device_id' => $uuid,
             'pluginVersion' => accessibe_get_plugin_version(),
-            'wordpressStoreName' => sanitizeDomain(wp_parse_url(site_url())['host']),
+            'wordpressStoreName' => accessibe_sanitizeDomain(wp_parse_url(site_url())['host']),
             'wordpressPluginVersionNumber' => accessibe_get_plugin_version(),
             'wordpressAccountUserID' => $current_user->ID,
             'wordpressUserEmail' => $current_user->user_email,
@@ -74,7 +74,7 @@ function track_plugin_upgrade() {
     update_option('accessibeforwp_options', json_encode($current_data));
 }
 
-function generateUuidV4() {
+function accessibe_generateUuidV4() {
     $data = random_bytes(16);
 
     // Set version to 4 and variant to 10xx
@@ -84,7 +84,7 @@ function generateUuidV4() {
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-function sanitizeDomain($domain) {
+function accessibe_sanitizeDomain($domain) {
     // Use regex to replace "www." only at the beginning
     return preg_replace("/^www\./", "", strtolower($domain));
 }

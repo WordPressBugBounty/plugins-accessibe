@@ -1,9 +1,9 @@
-=== Web Accessibility By accessiBe ===
+=== Web Accessibility by accessiBe ===
 Contributors: accessiBe
 Tags: accessibility, web accessibility, wordpress accessibility, ada, wcag, accessible, a11y
 Requires at least: 4.7
 Tested up to: 6.8
-Stable tag: 2.7
+Stable tag: 2.12
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -67,6 +67,26 @@ Plans start at $490 a year (or $59/mo), and vary depending on your website’s m
 See [here](https://accessibe.com/support/installation/how-to-install-accessibe-on-a-wordpress-website) for details.
 
 == Changelog ==
+= v2.12 =
+* 2025-11-20
+* vulnerability fixes
+
+= v2.11 =
+* 2025-10-10
+* Security fixes
+
+= v2.10 =
+* 2025-10-08
+* Banner updated
+
+= v2.9 =
+* 2025-10-08
+* Banner updated
+
+= v2.8 =
+* 2025-10-08
+* Banner updated
+
 = v2.7 =
 * 2025-04-28
 * Limited Access Mode
