@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('ABSPATH')) {
+    exit;
+}
 require_once(ACCESSIBE_WP_PLUGIN_DIR . 'mixpanel.php');
 
 class AccessibeWp {

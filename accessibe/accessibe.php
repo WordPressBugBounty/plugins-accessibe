@@ -3,7 +3,7 @@
   * Plugin Name: Web Accessibility by accessiBe
   * Plugin URI: https://accessibe.com/
   * Description: accessiBe is the #1 fully automated web accessibility solution. Protect your website from lawsuits and increase your potential audience.
-  * Version: 2.12
+  * Version: 2.13
   * Author: accessiBe
   * Author URI: https://accessibe.com/
   * License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
   die;
 }
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 use Mixpanel\Mixpanel;
 
 define('ACCESSIBE_WP_UNIVERSAL_URL', 'https://universal.accessibe.com');

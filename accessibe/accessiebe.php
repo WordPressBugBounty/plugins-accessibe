@@ -10,7 +10,7 @@
 
 defined('WPINC') || die;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 use Mixpanel\Mixpanel;
 
 // Hook into WordPress after it has loaded fully
